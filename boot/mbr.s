@@ -13,30 +13,13 @@ section mbr vstart=0x7c00
 ;clear the screen
   mov     ax, 0600h
   mov     bx, 0700h
-  mov     cx, 0               ; 左上角: (0, 0)
-  mov     dx, 184fh           ; 右下角: (80,25),
-                       ; VGA文本模式中，一行只能容纳80个字符，共25行
-                       ; 下标从0开始，所以0x18=24，0x4f=79
-  int     10h                 ; int 10h
-
-; 输出背景色绿色，前景色红色，并且跳动的字符串"1 MBR"
-  mov byte [gs:0x00],'1'
-  mov byte [gs:0x01],0xA4   ; A表示绿色背景闪烁，4表示前景色为红色
-
-  mov byte [gs:0x02],' '
-  mov byte [gs:0x03],0xA4
-
-  mov byte [gs:0x04],'M'
-  mov byte [gs:0x05],0xA4
-
-  mov byte [gs:0x06],'B'
-  mov byte [gs:0x07],0xA4
-
-  mov byte [gs:0x08],'R'    
-  mov byte [gs:0x09],0xA4
+  mov     cx, 0               ; top left corner: (0, 0)
+  mov     dx, 184fh           ; bottom right corner: (80,25),
+                       
+  int     10h                 ; BIOS int 10h
 
 
-
+  ;load os loader to memory
   mov eax, LOADER_START_SECTOR
   mov bx, LOADER_BASE_ADDR
   mov cx, 1
