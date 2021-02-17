@@ -41,9 +41,9 @@ ards_nr dw 0
 
 message db 'get memory error!'
 
-loader_start:
-    
 
+
+loader_start:
 ;get memory size
 ;---------------------- int 0x15 -------------------------- 
     xor ebx, ebx
@@ -128,8 +128,7 @@ loader_start:
 .mem_get_ok:
     mov [total_mem_bytes], edx
 
-
-;---------------------- Start Protection Mode----------------
+;start protection mode
 start_protection_mode:
     ;open A20
     in al,0x92
@@ -147,6 +146,53 @@ start_protection_mode:
     jmp dword SELECTOR_CODE:p_mode_start
 
 [bits 32]
+;-------------------------------------------------------
+;@brief : setup page directory table and page table
+;-------------------------------------------------------
+setup_page:
+    mov ecx, 4096
+    mov esi, 0
+.clear_page_dir:
+    mov byte [PAGE_DIR_TABLE_POS + esi], 0
+    inc esi
+    loop .clear_page_dir
+
+;create Page Directory Entry
+.create_pde:
+    mov eax, PAGE_DIR_TABLE_POS
+    add eax, 0x1000     ;position of first page table - pyhsical memory 0~0x3fffff
+    mov ebx, eax
+    or eax, PG_US_U | PG_RW_W | PG_P
+
+    mov dword [PAGE_DIR_TABLE_POS], eax ;first entry
+
+    mov dword [PAGE_DIR_TABLE_POS + 0xc00], eax
+    ;high 1G space will be used for kernel (0xc0000000 ~ 0xffffffff) - pyhsical memory 0~0x3fffff
+
+;create Page table entry
+    mov ecx, 256
+    mov esi, 0
+    mov edx , 0
+    or edx, PG_US_U | PG_RW_W | PG_P
+.create_pte:
+    mov [ebx + esi * 4], edx
+    add edx, 4096
+    inc esi
+    loop .create_pte
+
+    mov eax, PAGE_DIR_TABLE_POS
+    add eax, 0x2000
+    or eax, PG_US_U | PG_RW_W | PG_P
+    mov ebx, PAGE_DIR_TABLE_POS
+    mov ecx, 254
+    mov esi, 769
+.create_kernel_pde:
+    mov [ebx + esi * 4], eax
+    inc esi
+    add eax, 0x1000
+    loop .create_kernel_pde
+    ret
+    
 p_mode_start:
     mov ax, SELECTOR_DATA
     mov ds, ax
@@ -155,6 +201,28 @@ p_mode_start:
     mov esp, LOADER_STACK_TOP
     mov ax, SELECTOR_VEDIO
     mov gs, ax
-
     mov byte [gs:160], 'P'
+
+;start paging mechanism
+    call setup_page
+    sgdt [gdt_ptr]
+    mov ebx, [gdt_ptr + 2]
+
+    ;move VEDIO segment to high 1G virtual address space
+    or dword [ebx + 0x18 + 4], 0xc0000000
+
+    add dword [gdt_ptr + 2], 0xc0000000
+    add esp, 0xc0000000
+
+    mov eax, PAGE_DIR_TABLE_POS
+    mov cr3, eax 
+    
+    mov eax, cr0
+    or eax, 0x80000000
+    mov cr0, eax
+
+    lgdt [gdt_ptr]
+    mov byte [gs:160], 'V'
     jmp $
+
+
