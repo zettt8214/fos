@@ -2,6 +2,10 @@
 LOADER_BASE_ADDR equ 0x900
 LOADER_START_SECTOR equ 0x2
 PAGE_DIR_TABLE_POS  equ 0x100000
+
+KERNEL_BIN_BASE_ADDR equ 0x60000
+KERNEL_START_SECTOR equ 0x9
+KERNEL_ENTRY_POINT equ 0xc0002500
 ;--------------------Segment Descriptor -----------------
 ;
 ;-------------------------------------------------------------------------------------------------------------------------
@@ -56,3 +60,6 @@ PG_RW_R equ 00b
 PG_RW_W equ 10b
 PG_US_S equ 000b
 PG_US_U equ 100b
+
+;-------------- program header table entry -----------------
+PT_NULL equ 0
