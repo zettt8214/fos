@@ -1,4 +1,23 @@
-int main(){
+#include "print.h"
+void main(){
+    put_char('k');
+    put_char('e');
+    put_char('r');
+    put_char('n');
+    put_char('e');
+    put_char('l');
+    put_char('\n');
+    put_char('1');
+    put_char('2');
+    put_char('\b');
+    put_char('3');
+    put_char('\n');
+    int i = 0;
+    while(i < 80 * 5)
+    {
+        put_char('a');
+        i++;
+    }
     while(1);
-    return 0;
+    
 }
