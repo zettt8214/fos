@@ -19,6 +19,8 @@ typedef struct gate_desc {
 }gate_desc;
 
 static gate_desc idt[IDT_DESC_CNT];
+char* intr_name[IDT_DESC_CNT];
+intr_handler idt_table[IDT_DESC_CNT];
 extern intr_handler intr_entry_table[IDT_DESC_CNT];
 
 static void make_idt_desc(gate_desc* p_gdesc, uint8_t attr, intr_handler func){
@@ -56,10 +58,47 @@ static void pic_init(){
     put_str("[*]pic_init done\n");
 
 }
+static void general_intr_handler(uint8_t vec_nr){
+    if (vec_nr == 0x27 || vec_nr == 0x2f){
+        return;
+    }
+    put_str("Int vector: 0x");
+    put_int(vec_nr);
+    put_char('\n');
+}
+
+static void exception_init(){
+    int i;
+    for(i = 0; i < IDT_DESC_CNT; i++){
+        idt_table[i] = general_intr_handler;
+        intr_name[i] = "Unknow";
+    }
+    intr_name[0] = "#DE Divide Error";
+    intr_name[1] = "#DB Debug Exception";
+    intr_name[2] = "NMI Interrupt";
+    intr_name[3] = "#BP Breakpoint Exception";
+    intr_name[4] = "#OF Overflow Exception";
+    intr_name[5] = "#BR BOUND Range Exceeded Exception";
+    intr_name[6] = "#UD Invalid Opcode Exception";
+    intr_name[7] = "#NM Device Not Available Exception";
+    intr_name[8] = "#DF Double Fault Exception";
+    intr_name[9] = "Coprocessor Segment Overrun";
+    intr_name[10] = "#TS Invalid TSS Exception";
+    intr_name[11] = "#NP Segment Not Present";
+    intr_name[12] = "#SS Stack Fault Exception";
+    intr_name[13] = "#GP General Protection Exception";
+    intr_name[14] = "#PF Page-Fault Exception";
+    // intr_name[15] unused
+    intr_name[16] = "#MF x87 FPU Floating-Point Error";
+    intr_name[17] = "#AC Alignment Check Exception";
+    intr_name[18] = "#MC Machine-Check Exception";
+    intr_name[19] = "#XF SIMD Floating-Point Exception";
+}
 
 void idt_init(){
     put_str("[*]idt_init start\n");
     idt_desc_init();
+    exception_init();
     pic_init();
 
 
