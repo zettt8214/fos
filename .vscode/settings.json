@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "cstdint": "cpp"
+        "cstdint": "cpp",
+        "interrupt.h": "c",
+        "stdint.h": "c",
+        "io.h": "c"
     }
 }
