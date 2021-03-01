@@ -10,6 +10,9 @@
 #define PIC_S_CTRL 0xa0
 #define PIC_S_DATA 0xa1
 
+#define EFLAGS_IF 0x00000200
+#define GET_EFLAGES(EFLAG_VAR) asm volatile ("pushfl; popl %0" : "=g"(EFLAG_VAR))
+
 typedef struct gate_desc {
     uint16_t offset_low;
     uint16_t selector;
@@ -33,7 +36,7 @@ static void make_idt_desc(gate_desc* p_gdesc, uint8_t attr, intr_handler func){
 
 static void idt_desc_init(){
     int i;
-    for(int i = 0; i < IDT_DESC_CNT; i++){
+    for(i = 0; i < IDT_DESC_CNT; i++){
         make_idt_desc(idt + i, IDT_DESC_ATTR_DPL0, intr_entry_table[i]);
     }
     put_str("[*]idt_desc_init done\n");
@@ -108,4 +111,34 @@ void idt_init(){
     
     asm volatile ("lidt %0" : : "m"(idt_operand));
     put_str("[*]idt_init done\n");
+}
+
+intr_status intr_get_status(){
+    uint32_t eflags = 0;
+    GET_EFLAGES(eflags);
+    return (EFLAGS_IF & eflags)? INTR_ON : INTR_OFF;
+}
+
+intr_status intr_enable(){
+    intr_status old_status;
+    if((old_status = intr_get_status())){
+        return old_status;
+    }else{
+        asm volatile ("sti");
+        return old_status;
+    }
+}
+
+intr_status intr_disable(){
+    intr_status old_status;
+    if((old_status = intr_get_status())){
+        asm volatile ("cli" : : : "memory");
+        return old_status;
+    }else{
+        return old_status;
+    }
+}
+
+intr_status intr_set_status(intr_status status){
+    return status ? intr_enable() : intr_disable(); 
 }
