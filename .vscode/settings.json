@@ -3,6 +3,9 @@
         "cstdint": "cpp",
         "interrupt.h": "c",
         "stdint.h": "c",
-        "io.h": "c"
+        "io.h": "c",
+        "memory.h": "c",
+        "print.h": "c",
+        "string.h": "c"
     }
 }

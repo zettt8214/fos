@@ -1,8 +1,8 @@
 %include "boot.inc"
 
-section loader vstart=LOADER_BASE_ADDR
+section loader vstart=LOADER_BASE_ADDR  ;0x900
 LOADER_STACK_TOP equ   LOADER_BASE_ADDR
-jmp loader_start
+jmp loader_start    ;3 bytes
 
 ;create GDT
 GDT_BASE:
@@ -23,7 +23,7 @@ VEDIO_DESC:
 
 GDT_SIZE equ $ - GDT_BASE
 GDT_LIMIT equ GDT_SIZE - 1
-times 60 dq 0   ;60 reserved segement descriptors
+times 60 dq 0   ;60 reserved segement descriptors ;60*8 +  3
 
 total_mem_bytes dd 0    ; total_mem_bytes denotes memory size
 
@@ -204,7 +204,8 @@ setup_page:
     ;high 1G space will be used for kernel (0xc0000000 ~ 0xffffffff) - pyhsical memory 0~0x3fffff
     mov dword [PAGE_DIR_TABLE_POS + 0xc00], eax
     
-    mov dword [PAGE_DIR_TABLE_POS + 4096], eax
+    sub eax, 0x1000
+    mov dword [PAGE_DIR_TABLE_POS + 4092], eax
 
 ;create Page table entry
     mov ecx, 256
