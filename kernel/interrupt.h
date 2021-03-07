@@ -1,17 +1,20 @@
 #ifndef _KERNEL_INTERRUPT_H
 #define _KERNEL_INTERRUPT_H
+#include "stdint.h"
 
-typedef void* intr_handler;
+typedef void *intr_handler;
 void idt_init();
 
-typedef enum intr_status {
+typedef enum intr_status
+{
     INTR_OFF,
     INTR_ON
-}intr_status;
+} intr_status;
 
 /* open or close the interrupt */
 intr_status intr_get_status();
 intr_status intr_set_status(intr_status status);
 intr_status intr_enable();
 intr_status intr_disable();
+void register_handler(uint8_t vec_nr, intr_handler function);
 #endif

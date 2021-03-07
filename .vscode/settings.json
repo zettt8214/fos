@@ -6,6 +6,10 @@
         "io.h": "c",
         "memory.h": "c",
         "print.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "thread.h": "c",
+        "timer.h": "c",
+        "init.h": "c",
+        "list.h": "c"
     }
 }
