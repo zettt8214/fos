@@ -6,7 +6,7 @@
 #define STACK_MAGIC 0x19870916
 typedef void thread_func(void *);
 
-typedef enum task_status
+typedef enum TaskStatus
 {
     TASK_RUNNING,
     TASK_READY,
@@ -14,9 +14,9 @@ typedef enum task_status
     TASK_WAITING,
     TASK_HANGING,
     TASK_DIED
-} task_status;
+} TaskStatus;
 
-typedef struct intr_stack
+typedef struct IntrStack
 {
     uint32_t vec_nr;
     uint32_t edi;
@@ -39,9 +39,9 @@ typedef struct intr_stack
     void *esp;
     uint32_t ss;
 
-} intr_stack;
+} IntrStack;
 
-typedef struct thread_stack
+typedef struct TreadStack
 {
     uint32_t ebp;
     uint32_t ebx;
@@ -54,25 +54,27 @@ typedef struct thread_stack
     thread_func *function;
     void *func_arg;
 
-} thread_stack;
+} TreadStack;
 
-typedef struct task_pcb
+typedef struct TaskPcb
 {
     uint32_t *self_kstack;
-    task_status status;
+    TaskStatus status;
     char name[16];
     uint8_t priority;
     uint8_t ticks;          //the time of task executing in cpu at every turn
     uint32_t elapsed_ticks; //total ticks of task executing in cpu
-    list_elem general_tag;
-    list_elem all_list_tag;
+    ListElem general_tag;
+    ListElem all_list_tag;
     uint32_t *pgdir; //page table virtul address
     uint32_t stack_magic;
-} task_pcb;
-void thread_create(task_pcb* pthread, thread_func function, void* func_arg);
-void init_thread(task_pcb* pthread, char* name, int prio);
-task_pcb *thread_start(char *name, int prio, thread_func function, void *func_arg);
-task_pcb *running_thread();
+} TaskPcb;
+void thread_create(TaskPcb *pthread, thread_func function, void *func_arg);
+void init_thread(TaskPcb *pthread, char *name, int prio);
+TaskPcb *thread_start(char *name, int prio, thread_func function, void *func_arg);
+TaskPcb *running_thread();
 void thread_init();
 void schedule();
+void thread_block(TaskStatus stat);
+void thread_unblock(TaskPcb *pthread);
 #endif

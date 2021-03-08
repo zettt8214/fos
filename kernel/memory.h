@@ -4,21 +4,21 @@
 #include "stdint.h"
 #include "bitmap.h"
 
-typedef struct virtual_addr {
-    bitmap vaddr_bitmap;
+typedef struct VirtualAddr {
+    BitMap vaddr_bitmap;
     uint32_t vaddr_start;
-}virtual_addr;
+}VirtualAddr;
 
-typedef struct pool {
-    bitmap pool_bitmap;
+typedef struct Pool {
+    BitMap pool_bitmap;
     uint32_t phy_addr_start;
     uint32_t pool_size;
-}pool;
+}Pool;
 
-typedef enum pool_flag{
-    KERNEL_POOL = 1,
-    USER_POOL = 2
-}pool_flag;
+typedef enum PoolFlag{
+    KKERNEL_POOL = 1,
+    KUSER_POOL = 2
+}PoolFlag;
 
 /* flages of page table and page directory table */
 #define PG_P_1 1
@@ -30,6 +30,6 @@ typedef enum pool_flag{
 
 void mem_init();
 void* get_kernel_pages(uint32_t pg_cnt);
-void* malloc_page(pool_flag pf,uint32_t pg_cnt);
+void* malloc_page(PoolFlag pf,uint32_t pg_cnt);
 
 #endif

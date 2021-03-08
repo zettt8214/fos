@@ -6,29 +6,29 @@
 #define elem2entry(struct_type, struct_member_name, elem_ptr) \
     (struct_type *)((int)elem_ptr - offset(struct_type, struct_member_name))
 
-typedef struct list_elem
+typedef struct ListElem
 {
-    struct list_elem *next;
-    struct list_elem *prev;
-} list_elem;
+    struct ListElem *next;
+    struct ListElem *prev;
+} ListElem;
 
-typedef struct list
+typedef struct List
 {
-    struct list_elem head;
-    struct list_elem tail;
-} list;
+    ListElem head;
+    ListElem tail;
+} List;
 
-typedef bool(function)(list_elem *, int arg);
+typedef bool(function)(ListElem *, int arg);
 
-void list_init(list *list);
-void list_insert_before(list_elem *before, list_elem *elem);
-void list_push(list *plist, list_elem *elem);
-void list_iterate(list *plist);
-void list_append(list *plist, list_elem *elem);
-void list_remove(list_elem *elem);
-list_elem *list_pop(list *plist);
-bool list_empty(list *plist);
-uint32_t list_len(list *plist);
-list_elem *list_traveral(list *plist, function func, int arg);
-bool elem_find(list *plist, list_elem *obj_elem);
+void list_init(List *list);
+void list_insert_before(ListElem *before, ListElem *elem);
+void list_push(List *plist, ListElem *elem);
+void list_iterate(List *plist);
+void list_append(List *plist, ListElem *elem);
+void list_remove(ListElem *elem);
+ListElem *list_pop(List *plist);
+bool list_empty(List *plist);
+uint32_t list_len(List *plist);
+ListElem *list_traveral(List *plist, function func, int arg);
+bool elem_find(List *plist, ListElem *obj_elem);
 #endif

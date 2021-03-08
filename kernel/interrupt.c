@@ -143,16 +143,16 @@ void idt_init()
     put_str("[*]idt_init done\n");
 }
 
-intr_status intr_get_status()
+IntrStatus intr_get_status()
 {
     uint32_t eflags = 0;
     GET_EFLAGES(eflags);
-    return (EFLAGS_IF & eflags) ? INTR_ON : INTR_OFF;
+    return (EFLAGS_IF & eflags) ? KINTRON : KINTROFF;
 }
 
-intr_status intr_enable()
+IntrStatus intr_enable()
 {
-    intr_status old_status;
+    IntrStatus old_status;
     if ((old_status = intr_get_status()))
     {
         return old_status;
@@ -164,9 +164,9 @@ intr_status intr_enable()
     }
 }
 
-intr_status intr_disable()
+IntrStatus intr_disable()
 {
-    intr_status old_status;
+    IntrStatus old_status;
     if ((old_status = intr_get_status()))
     {
         asm volatile("cli"
@@ -181,7 +181,7 @@ intr_status intr_disable()
     }
 }
 
-intr_status intr_set_status(intr_status status)
+IntrStatus intr_set_status(IntrStatus status)
 {
     return status ? intr_enable() : intr_disable();
 }

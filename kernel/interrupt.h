@@ -5,16 +5,16 @@
 typedef void *intr_handler;
 void idt_init();
 
-typedef enum intr_status
+typedef enum IntrStatus
 {
-    INTR_OFF,
-    INTR_ON
-} intr_status;
+    KINTROFF,
+    KINTRON
+} IntrStatus;
 
 /* open or close the interrupt */
-intr_status intr_get_status();
-intr_status intr_set_status(intr_status status);
-intr_status intr_enable();
-intr_status intr_disable();
+IntrStatus intr_get_status();
+IntrStatus intr_set_status(IntrStatus status);
+IntrStatus intr_enable();
+IntrStatus intr_disable();
 void register_handler(uint8_t vec_nr, intr_handler function);
 #endif

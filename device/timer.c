@@ -30,7 +30,7 @@ static void frequency_set(uint8_t counter_port,
 /* timer interrupt function */
 static void intr_timer_handler(void)
 {
-    task_pcb *cur_thread = running_thread();
+    TaskPcb *cur_thread = running_thread();
 
     ASSERT(cur_thread->stack_magic == 0x19870916);
 
