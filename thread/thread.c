@@ -33,8 +33,8 @@ void thread_create(TaskPcb *pthread, thread_func function, void *func_arg)
 {
     pthread->self_kstack -= sizeof(IntrStack);
 
-    pthread->self_kstack -= sizeof(TreadStack);
-    TreadStack *kthread_stack = (TreadStack *)pthread->self_kstack;
+    pthread->self_kstack -= sizeof(ThreadStack);
+    ThreadStack *kthread_stack = (ThreadStack *)pthread->self_kstack;
     kthread_stack->eip = kernel_thread;
     kthread_stack->function = function;
     kthread_stack->func_arg = func_arg;
@@ -117,7 +117,7 @@ void thread_init()
     list_init(&thread_ready_list);
     list_init(&thread_all_list);
     make_main_thread();
-    put_str("[-]thread_init done\n");
+    put_str("[+]thread_init done\n");
 }
 
 void thread_block(TaskStatus stat)

@@ -77,4 +77,20 @@ intr_entry_table:
     VECTOR 0x1d, ERROR_CODE
     VECTOR 0x1e, ERROR_CODE
     VECTOR 0x1f, ZERO
-    VECTOR 0x20, ZERO
+    VECTOR 0x20, ZERO   ;Clock interrupt
+    VECTOR 0x21, ZERO   ;Keyboard interrupt
+    VECTOR 0x22, ZERO   ;Used for cascade
+    VECTOR 0x23, ZERO   ;Serial port 2
+    VECTOR 0x24, ZERO   ;Serial port 1
+    VECTOR 0x25, ZERO   ;Parallel port 2
+    VECTOR 0x26, ZERO   ;Floppy disk
+    VECTOR 0x27, ZERO   ;Parallel port 1
+    VECTOR 0x28, ZERO   ;Real time clock
+    VECTOR 0x29, ZERO   ;Redirection
+    VECTOR 0x2a, ZERO   ;Saved
+    VECTOR 0x2b, ZERO   ;Saved
+    VECTOR 0x2c, ZERO   ;PS/2 mouse
+    VECTOR 0x2d, ZERO   ;Fpu
+    VECTOR 0x2e, ZERO   ;Hard disk
+    VECTOR 0x2f, ZERO   ;Saved
+

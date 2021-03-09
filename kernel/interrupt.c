@@ -4,7 +4,7 @@
 #include "io.h"
 #include "print.h"
 
-#define IDT_DESC_CNT 0x21
+#define IDT_DESC_CNT 0x30
 #define PIC_M_CTRL 0x20
 #define PIC_M_DATA 0x21
 #define PIC_S_CTRL 0xa0
@@ -61,8 +61,12 @@ static void pic_init()
     outb(PIC_S_DATA, 0x02);
     outb(PIC_S_DATA, 0x01);
 
-    outb(PIC_M_DATA, 0Xfe); //set OCW1
-    outb(PIC_S_DATA, 0Xff); //set OCW1
+    // outb(PIC_M_DATA, 0xfe); //set OCW1
+    // outb(PIC_S_DATA, 0xff); //set OCW1
+
+    /* keyboard interrupt */
+    outb(PIC_M_DATA, 0xfc); //set OCW1
+    outb(PIC_S_DATA, 0xff); //set OCW1
     put_str("[*]pic_init done\n");
 }
 static void general_intr_handler(uint8_t vec_nr)

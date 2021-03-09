@@ -10,6 +10,9 @@
         "thread.h": "c",
         "timer.h": "c",
         "init.h": "c",
-        "list.h": "c"
+        "list.h": "c",
+        "keyboard.h": "c",
+        "ioqueue.h": "c",
+        "type_traits": "c"
     }
 }

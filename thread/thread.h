@@ -41,7 +41,7 @@ typedef struct IntrStack
 
 } IntrStack;
 
-typedef struct TreadStack
+typedef struct ThreadStack
 {
     uint32_t ebp;
     uint32_t ebx;
@@ -54,7 +54,7 @@ typedef struct TreadStack
     thread_func *function;
     void *func_arg;
 
-} TreadStack;
+} ThreadStack;
 
 typedef struct TaskPcb
 {
